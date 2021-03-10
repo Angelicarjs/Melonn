@@ -2,14 +2,13 @@ import React from 'react'
 // Third-party imports
 import { Divider } from 'antd'
 // Components
-import Header from './Header'
+//import Header from './Header'
 import {
     BackgroundDiv,
     ProductsDivHeader,
     DocumentDiv,
     RowDiv,
     ProductsDiv,
-    ProductItem,
     PRIMARY_COLOR
   } from './styledComponents'
   

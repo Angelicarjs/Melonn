@@ -4,7 +4,7 @@ import { StyledCard, Title, Info, Button } from './styledComponents'
 // Next imports
 import Link from 'next/link'
 // Components
-import Header from './Header'
+//import Header from './Header'
 
 function SellOrderList() {
 

@@ -38,8 +38,9 @@ const initialState = {
 
 
 function SellOrderCreation() {
-  const methods = []
-  async function postData(dataType, url) {
+  
+  async function postData(url) {
+    const methods = []
     await fetch(url, {
     method: 'GET',
     headers: {
@@ -47,18 +48,22 @@ function SellOrderCreation() {
     }
    }).then(response => response.json())
    .then( data => {
-    if(dataType === "shippingMethods"){
-      data.forEach(eachMethod => methods.push(
-        `<option value='${eachMethod.name}'>${eachMethod.name}</option>`
-        )) }
-   })
-    
+    console.log(data)   
+    return data})
   }
+
+  const otrafuncion = async () => {
+    console.log(await postData("https://yhua9e1l30.execute-api.us-east-1.amazonaws.com/sandbox/shipping-methods"))
+    }
+ 
+    otrafuncion()
+
+  //`<option value='${eachMethod.name}'>${eachMethod.name}</option>`
 
   //Retrieve the list of available shipping methods:
 
-  postData('shippingMethods',"https://yhua9e1l30.execute-api.us-east-1.amazonaws.com/sandbox/shipping-methods")
-
+ //const metodosok = postData('shippingMethods',"https://yhua9e1l30.execute-api.us-east-1.amazonaws.com/sandbox/shipping-methods")
+  //console.log(metodosok)
   //Retrieve shipping method details:
 
   //postData("https://yhua9e1l30.execute-api.us-east-1.amazonaws.com/sandbox/shipping-methods/1")
@@ -66,7 +71,6 @@ function SellOrderCreation() {
   //Retrieve the list of off days:
 
   //postData("https://yhua9e1l30.execute-api.us-east-1.amazonaws.com/sandbox/off-days")
-
 
   const [state, setState] = useState({ ...initialState })
 
@@ -118,7 +122,7 @@ function SellOrderCreation() {
         setState({ ...state, products: products.filter((parameter, index) => i !== index) })
       }
 
-    const sendOrder = () => {
+    const handleSubmit = async e => {
         var missingProductProperty = false
         products.map((product) => {
             console.log(product)
@@ -152,31 +156,23 @@ function SellOrderCreation() {
                     text: 'Debe existir al menos un producto'
                   })
         }else{
-            const finalProducts = []
-            products.forEach((product) => {
-                finalProducts.push({
-                    number: product.number,
-                    name: product.name,
-                    quantity: product.quantity,
-                    weight: product.weight
-                })
-            })
+ 
+            try{
+                let config = {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(state)
+                }
+                let res = await fetch('http://localhost:9000/testAPI', config)
+                let json = await res.json()
 
-            const data = {
-            sellerStore: sellerStore,
-            shippingMethod: null,
-            externalOrderNumber: externalOrderNumber,
-            buyerFullName:  buyerFullName,
-            buyerPhoneNumber:  buyerPhoneNumber,
-            buyerEmail:  buyerEmail,
-            shippingAddress:  shippingAddress,
-            shippingCity:  shippingCity,
-            shippingRegion: shippingAddress,
-            shippingCountry: shippingCountry,
-            products: finalProducts
+                console.log(json)
+            }catch (error){
+                console.log(error)
             }
-
-            console.log(data)
         }
     }
 
@@ -262,7 +258,7 @@ function SellOrderCreation() {
 
                 <div style={{ textAlign: 'center', width: '20%' }}>
                   <p style={{ fontSize:'13px', margin: '1em' }}>Method</p>
-                  <select>{methods}</select> 
+                  {/* <select>{methods}</select>  */}
                 </div>
 
               </RowDiv>
@@ -309,7 +305,7 @@ function SellOrderCreation() {
 
         <br/>
 
-        <Button style={{ width: '100%', backgroundColor: 'red'}} onClick={() =>sendOrder()}> Send </Button>
+        <Button style={{ width: '100%', backgroundColor: 'red'}} onClick={() =>handleSubmit()}> Send </Button>
       </DocumentDiv>
     </BackgroundDiv>
   
